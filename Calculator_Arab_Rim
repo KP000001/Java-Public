@@ -1,11 +1,6 @@
-import java.util.Objects;
 import java.util.Scanner;
 
 class Main {
-    static int result;
-    static int a;
-    static int b;
-    static String[] arrayArab = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     static String[] arrayRim = new String[]{"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI",
             "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI", "XXII", "XXIII", "XXIV", "XXV",
             "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII",
@@ -14,102 +9,106 @@ class Main {
             "LXV", "LXVI", "LXVII", "LXVIII", "LXIX", "LXX", "LXXI", "LXXII", "LXXIII", "LXXIV", "LXXV", "LXXVI",
             "LXXVII", "LXXVIII", "LXXIX", "LXXX", "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII",
             "LXXXVIII", "LXXXIX", "XC", "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"};
-    public static void main(String[] args) throws Exception{
-        Scanner sc = new Scanner(System.in);
+    static int result;
+    static boolean numberOne;
+    static boolean numberTwo;
+    static int a;
+    static int b;
+    public static void main(String[] args) throws Exception {
         System.out.println("Введите математическое выражение, между цифрами и знаками обязателен пробел " +
                 "(пример:5 + 2 или V + III)");
         System.out.println("Input:");
-        String[] lineInt;
-        String[] lineString;
-        if (sc.hasNextInt()) {
-            lineInt = sc.nextLine().split(" ");
-            if (lineInt.length < 3) {
-                throw new Exception("//т.к. строка не является математической операцией");
-            }
-            if (lineInt.length > 3) {
-                throw new Exception("//т.к. формат математической операции не удовлетворяет заданию - два операнда и " +
-                        "один оператор (+, -, /, *)");
-            }
-            chapterArab(lineInt[0], lineInt[1], lineInt[2]);
-        } else {
-            lineString = sc.nextLine().split(" ");
-            if (lineString.length < 3) {
-                throw new Exception("//т.к. строка не является математической операцией");
-            }
-            if (lineString.length > 3) {
-                throw new Exception("//т.к. формат математической операции не удовлетворяет заданию - два операнда и " +
-                        "один оператор (+, -, /, *)");
-            }
-            chapterRim(lineString[0], lineString[1], lineString[2]);
-        }
+        Scanner scanner = new Scanner(System.in);
+        String sc = scanner.nextLine();
+        String input = sc.trim();
+        calc(input);
     }
-    static void chapterArab(String arabOne, String znak, String arabTwo) throws Exception {
-        int a = Integer.parseInt(arabOne);
-        int b;
-        try {
-            b = Integer.parseInt(arabTwo);
-        } catch (NumberFormatException e) {
+    public static String calc(String input) throws Exception {
+        String[] inputString = input.split(" ");
+        if (inputString.length < 3) {
+            throw new Exception("//т.к. строка не является математической операцией");
+        }
+        if (inputString.length > 3) {
+            throw new Exception("//т.к. формат математической операции не удовлетворяет заданию - два операнда и " +
+                    "один оператор (+, -, /, *)");
+        }
+        for (int i=0; i<10; i++) {
+            if (inputString[0].equals(arrayRim[i])) {
+                numberOne = true;
+                break;
+            }else{
+                numberOne=false;
+            }
+        }
+            for (int i=0; i<10; i++) {
+                if (inputString[2].equals(arrayRim[i])) {
+                    numberTwo = true;
+                    break;
+                }else{
+                    numberTwo = false;
+                }
+            }
+        if ((numberOne==false) && (numberTwo==false)) {
+            int a = Integer.parseInt(inputString[0]);
+            int b = Integer.parseInt(inputString[2]);
+            if (a < 1 || a > 10) {
+                throw new Exception("//т.к. калькулятор принимает значение в интервале от 1 до 10");
+            }
+            if (b < 1 || b > 10) {
+                throw new Exception("//т.к. калькулятор принимает значение в интервале от 1 до 10");
+            }
+            if ("+".equals(inputString[1])) {
+                result = a + b;
+            } else if ("-".equals(inputString[1])) {
+                result = a - b;
+            } else if ("/".equals(inputString[1])) {
+                result = a / b;
+            } else if ("*".equals(inputString[1])) {
+                result = a * b;
+            } else {
+                throw new Exception("//т.к. формат математического действия неверен (+, -, *, /");
+            }
+            System.out.println("Output:");
+            System.out.println(result);
+        } if ((numberOne) && (numberTwo)) {
+            for (int i = 0; i < arrayRim.length; i++) {        // переводим первую римскую цифру в арабскую
+                if (inputString[0].equals(arrayRim[i])) {
+                    a = i + 1;
+                    break;
+                }
+            }
+            for (int i = 0; i < arrayRim.length; i++) {        // переводим вторую римскую цифру в арабскую
+                if (inputString[2].equals(arrayRim[i])) {
+                    b = i + 1;
+                    break;
+                }
+            }
+            if (a < 1 || a > 10) {
+                throw new Exception("// т.к.  калькулятор принимает значения от I до X");
+            }
+            if (b > 10) {
+                throw new Exception("// т.к.  калькулятор принимает значения от I до X");
+            }
+            switch (inputString[1]) {
+                case "+" -> result = (a + b);
+                case "-" -> result = (a - b);
+                case "/" -> result = (a / b);
+                case "*" -> result = (a * b);
+                default -> throw new Exception("//т.к. формат математического действия неверен (+, -, /, *)");
+            }
+            if (result < 0) {
+                throw new Exception("//т.к. в римской системе нет отрицательных чисел");
+            }
+            if (result == 0) {
+                throw new Exception("//т.к. в римской системе нет числа ноль");
+            }
+            System.out.println("Output:");
+            System.out.println(arrayRim[result - 1]);
+        } if ((numberOne==false) && (numberTwo)){
+            throw new Exception("//т.к. используются одновременно разные системы счисления");
+        } else if ((numberOne) && (numberTwo==false)){
             throw new Exception("//т.к. используются одновременно разные системы счисления");
         }
-        if (a < 1 || a > 10) {
-            throw new Exception("//т.к. калькулятор принимает значение в интервале от 1 до 10");
-        }
-        if (b < 1 || b > 10) {
-            throw new Exception("//т.к. калькулятор принимает значение в интервале от 1 до 10");
-        }
-        switch (znak) {
-            case "+" -> result = a + b;
-            case "-" -> result = a - b;
-            case "/" -> result = a / b;
-            case "*" -> result = a * b;
-            default -> throw new Exception("//т.к. формат математического действия неверен (+, -, *, /");
-        }
-        System.out.println("Output:");
-        System.out.println(result);
-    }
-    static void chapterRim(String rimOne, String znak, String rimTwo) throws Exception {
-        for (String s : arrayArab) {
-            if (Objects.equals(rimTwo, s)) {
-                throw new Exception("//т.к. используются одновременно разные системы счисления");
-            }
-        }
-        for (int i = 0; i < arrayRim.length; i++) {
-            if (Objects.equals(rimOne, arrayRim[i])) {
-                a = i + 1;
-                break;
-            }
-        }
-        for (int i = 0; i < arrayRim.length; i++) {
-            if (Objects.equals(rimTwo, arrayRim[i])) {
-                b = i + 1;
-                break;
-            }
-        }
-        if (a < 1 || a > 10) {
-            throw new Exception("//т.к. калькулятор принимает значение в интервале от I до X");
-        }
-        if (b < 1 || b > 10) {
-            throw new Exception("//т.к. калькулятор принимает значение в интервале от I до X");
-        }
-        switch (znak) {
-            case "+" -> result = a + b;
-            case "-" -> result = a - b;
-            case "/" -> result = a / b;
-            case "*" -> result = a * b;
-            default -> throw new Exception("//т.к. формат математического действия неверен (+, -, *, /");
-        }
-        if (result < 0) {
-            throw new Exception("//т.к. в римской системе нет отрицательных чисел");
-        }
-        if (result == 0) {
-            throw new Exception("//т.к. в римской системе нет числа ноль");
-        }
-        System.out.println("Output:");
-        System.out.println(arrayRim[result - 1]);
+        return input;
     }
 }
-
-
-
-
-
